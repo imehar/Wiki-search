@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="author" content="Mehar Madnani">
+    <meta name="description" content="My Practice Search Engine">
+    <title>Wiki Search</title>
+</head>
+
+<body>
+    <a href="{{ url_for('index') }}">Wiki Search</a>
+
+    <div>
+        {% block content %}
+        {% endblock content %}
+    </div>
+</body>
+</html>

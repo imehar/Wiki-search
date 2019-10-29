@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+    <ul>
+    {% for docid in results %}
+        <li>
+            <a href="{{ url_for('showpages', docid=docid) }}">{{ documents[docid]['title'] }}
+        </li>
+    {% else %}
+        <li>No pages so far</li>
+    {% endfor %}
+    </ul>
+
+
+{% endblock content %}

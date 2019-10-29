@@ -7,6 +7,12 @@ from nltk.corpus import stopwords
 import copy
 from functools import reduce
 
+from flask import Flask
+from flask import Flask, render_template, request
+
+
+
+app = Flask(__name__)
 porter=PorterStemmer()
 
 
@@ -14,7 +20,10 @@ class QueryIndex:
 	"""docstring for QueryIndex"""
 	def __init__(self):
 		self.index = {}
+		self.readFile = 'index.json'
+		self.collectionFile = 'testCollection.json'
 		self.sw = set(stopwords.words('english'))
+		self.documents = {}
 
 	def intersectList(self,lists):
 		if len(lists)==0:
@@ -43,8 +52,13 @@ class QueryIndex:
 
 
 	def readIndex(self,file):
-		self.index = json.load(open(file,'r'))
+		if len(self.index)==0:
+			self.index = json.load(open(file,'r'))
 
+
+	def readDoc(self,file):
+		if len(self.documents)==0:
+			self.documents = json.load(open(file,'r'))
 
 	def queryType(self,q):
 		"""
@@ -143,29 +157,57 @@ class QueryIndex:
 		return result
 
 
-	def startquery(self):
-		readFile = 'index.json'
+	def startquery(self,q):
+		readFile = self.readFile
 		self.readIndex(readFile)
 		print("Done reading file ...")
-		while True:
-			q = input()
-			if len(q)<=0:
-				break
-			if q=='quit':
-				break
-			qt = self.queryType(q)
-
-			if qt=="OWQ":
-				docid = self.owq(q)
-				print(docid)
-			elif qt=="FTQ":
-				docid = self.ftq(q)
-				print(docid)
-			elif qt=="PQ":
-				docid = self.pq(q)
-				print(docid)
+		# while True:
+			# q = input()
+		# if len(q)<=0:
+		# 	break
+		# if q=='quit':
+		# 	break
+		qt = self.queryType(q)
+		docid = []
+		if qt=="OWQ":
+			docid = self.owq(q)
+			# print(docid)
+		elif qt=="FTQ":
+			docid = self.ftq(q)
+			# print(docid)
+		elif qt=="PQ":
+			docid = self.pq(q)
+			# print(docid)
 			# print("Type ",qt)
+		return docid
 
-if __name__ == '__main__':
-	q = QueryIndex()
-	q.startquery()
+
+
+
+
+q = QueryIndex()
+@app.route("/")
+def index():
+	q.readIndex(q.readFile)
+	print("Done reading file ...")
+	return render_template('index.html')
+
+
+@app.route("/search" ,methods=['GET','POST'])
+def searchit():
+	query = request.form.get('search','')
+	# print('query ',query)
+	# if query=='':
+	# 	return render_template('index.html')
+	result = q.startquery(query)
+	result = list(map(str,result))
+	q.readDoc(q.collectionFile)
+	return render_template('results.html',results=result,documents = q.documents)
+
+
+@app.route("/showpage/<docid>")
+def showpages(docid):
+	return docid
+
+
+
