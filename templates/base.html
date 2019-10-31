@@ -4,12 +4,13 @@
     <meta charset="utf-8">
     <meta name="author" content="Mehar Madnani">
     <meta name="description" content="My Practice Search Engine">
-    <title>Wiki Search</title>
+    <title>{% block title %}
+        {% endblock title %}
+    </title>
+    <link href={{ url_for('static' , filename='styles/style.css') }} rel="stylesheet">
 </head>
 
 <body>
-    <a href="{{ url_for('index') }}">Wiki Search</a>
-
     <div>
         {% block content %}
         {% endblock content %}

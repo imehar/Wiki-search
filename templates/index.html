@@ -1,9 +1,17 @@
 {% extends "base.html" %}
 
+{% block title %}
+Wiki-Search
+{% endblock title %}
+
 {% block content %}
-    <form action="{{ url_for('searchit') }} " method="POST">
-        <input type="text" name="search" >
-        <input type="submit" name="submit">
-    </form>
+    <div id="central">
+        <img src="{{ url_for('static', filename='images/Wikipedia-logo.png') }}" title="Wiki-it">
+        <p class="search-title">Wiki-search</p>
+        <form action="{{ url_for('searchit') }} " method="POST">
+          <input type="text" title="Search" name="search" >
+          <input type="submit" value="Search">
+        </form>
+    </div>
     
 {% endblock content %}

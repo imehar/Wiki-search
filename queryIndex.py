@@ -11,8 +11,8 @@ from flask import Flask
 from flask import Flask, render_template, request
 
 
-
 app = Flask(__name__)
+
 porter=PorterStemmer()
 
 
@@ -208,6 +208,5 @@ def searchit():
 @app.route("/showpage/<docid>")
 def showpages(docid):
 	return docid
-
 
 
