@@ -3,17 +3,42 @@
 Results
 {% endblock title %}
 {% block content %}
+<div class="main">
+    <div class="logo">
+        <img src="{{ url_for('static', filename='images/Wikipedia-logo.png') }}" height="55px"/></div>
+    <div class="search">
+        <input type="result-input" /><img class="mag" src="{{ url_for('static', filename='images/search-icon.png') }}"/>
+    </div>
+</div>
 
 
-    <ul>
-    {% for docid in results %}
-        <li>
-            <a href="{{ url_for('showpages', docid=docid) }}">{{ documents[docid]['title'] }}
-        </li>
-    {% else %}
-        <li>No pages so far</li>
-    {% endfor %}
-    </ul>
+    {#
+        <ul>
+        {% for docid in results %}
+            <li>
+                <a href="{{ url_for('showpages', docid=docid) }}">{{ documents[docid]['title'] }}
+            </li>
+        {% else %}
+            <li>No pages so far</li>
+        {% endfor %}
+        </ul>
+    #}
+    
+    <div class="flex-container">
+        {% for docid in results %}
+            <div >
+                <div class="results">
+                    <div class="ind">
+                        <a class="link" href="{{ url_for('showpages', docid=docid) }}">{{ documents[docid]['title'] }}</a><br/>
+                        <a class="url" href="{{ url_for('showpages', docid=docid) }}">{{ url_for('showpages', docid=docid) }} &#9662;</a>
+                    <p class="desc">{{ documents[docid]['text'][:150] }}  ...</p>
+                </div>
+            </div>
+        {% else %}
+                <div>No pages so far</div>
+        {% endfor %}
+    </div>
+    
 
 
 {% endblock content %}

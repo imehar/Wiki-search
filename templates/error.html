@@ -1,17 +1,14 @@
-<!DOCTYPE html>
-<head>
-	<title>
-		Error
-	</title>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">	
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-</head>
-<body>
-	<h1 class="header">Error</h1>
-	
-	<p class="text-danger">
-		{{ message }}
-	</p>
-	<br>
-	<a class="btn-link" href="{{ url_for('index') }}">Try again</a>
-</body>
+{% extends "base.html" %}
+{% block title %}
+Error
+{% endblock title %}
+{% block content %}
+<h1 class="header">Error</h1>
+
+<p class="text-danger">
+	{{ message }}
+</p>
+<br>
+<a class="btn-link" href="{{ url_for('index') }}">Try again</a>
+
+{% endblock content %}

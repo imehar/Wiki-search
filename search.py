@@ -12,6 +12,7 @@ from flask import Flask, render_template, request
 
 
 app = Flask(__name__)
+app.debug = True
 
 porter=PorterStemmer()
 
@@ -161,24 +162,14 @@ class QueryIndex:
 		readFile = self.readFile
 		self.readIndex(readFile)
 		print("Done reading file ...")
-		# while True:
-			# q = input()
-		# if len(q)<=0:
-		# 	break
-		# if q=='quit':
-		# 	break
 		qt = self.queryType(q)
 		docid = []
 		if qt=="OWQ":
 			docid = self.owq(q)
-			# print(docid)
 		elif qt=="FTQ":
 			docid = self.ftq(q)
-			# print(docid)
 		elif qt=="PQ":
 			docid = self.pq(q)
-			# print(docid)
-			# print("Type ",qt)
 		return docid
 
 
