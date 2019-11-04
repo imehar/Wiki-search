@@ -15,9 +15,11 @@ class Index():
 	"""class for processing and the wikipedia document and storing the index file"""
 	def __init__(self):
 		self.index = defaultdict(list)
+		self.collection = defaultdict(dict)
 		self.sw = set(stopwords.words('english'))
-		self.collectionFile = 'testCollection.dat'
+		self.collectionFile = './data/wiki_01'
 		self.indexFile = 'index.json'
+		self.colFile = 'testCollection.json'
 
 	def getTerms(self,line):
 		""" @Input str of words
@@ -33,21 +35,25 @@ class Index():
 		"""
 			@returns list of dict which contains 'id', 'title', 'text' of pages
 		"""
-		doc = []
-		text = ""
-		for line in open(file,'r'):
-			if line=='</page>\n':
-				pageid=re.search('<id>(.*?)</id>', text, re.DOTALL)
-				pagetitle=re.search('<title>(.*?)</title>', text, re.DOTALL)
-				pagetext=re.search('<text>(.*?)</text>', text, re.DOTALL)
-				d={}
-				d['id']=pageid.group(1)
-				d['title']=pagetitle.group(1)
-				d['text']=pagetext.group(1)
-				doc.append(d)
-				text = ""
-			text += line
+		with open(file,'r') as inf:
+			text = inf.read()
+		decoder = json.JSONDecoder()
+		doc = {}
+		while True:
+			obj, remain = decoder.raw_decode(text)
+			doc[obj['id']] = obj
+			text = text[remain:].strip()
+			print(obj['id'],len(text),len(doc))
+			if len(text)==0:
+				break
+
+		self.collection = doc
+		self.writeColfile(self.colFile)
 		return doc
+
+	def writeColfile(self,file):
+		with open(file,'w') as fout:
+			json.dump(self.collection,fout)
 
 	def writeIndexfile(self,file):
 		with open(file, 'w') as fout:
@@ -63,7 +69,7 @@ class Index():
 		collectionFile = self.collectionFile
 		indexFile = self.indexFile
 		allPages = self.getPageInfo(collectionFile)
-		for pagedict in allPages:
+		for pageid,pagedict in allPages.items():
 			lines='\n'.join((pagedict['title'],pagedict['text']))
 			pageid=int(pagedict['id'])
 			terms=self.getTerms(lines)

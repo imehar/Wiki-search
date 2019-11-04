@@ -7,7 +7,10 @@ Results
     <div class="logo">
         <img src="{{ url_for('static', filename='images/Wikipedia-logo.png') }}" height="55px"/></div>
     <div class="search">
-        <input type="result-input" /><img class="mag" src="{{ url_for('static', filename='images/search-icon.png') }}"/>
+        <form action="{{ url_for('searchit') }} " method="POST">
+            <input type="result-input" name="search" title="Search" /><img class="mag" src="{{ url_for('static', filename='images/search-icon.png') }}"/>
+            <input type="submit" value="Search" hidden>
+        </form>
     </div>
 </div>
 
@@ -31,7 +34,7 @@ Results
                     <div class="ind">
                         <a class="link" href="{{ url_for('showpages', docid=docid) }}">{{ documents[docid]['title'] }}</a><br/>
                         <a class="url" href="{{ url_for('showpages', docid=docid) }}">{{ url_for('showpages', docid=docid) }} &#9662;</a>
-                    <p class="desc">{{ documents[docid]['text'][:150] }}  ...</p>
+                    <p class="desc">{{ texts[docid][:150] }}  ...</p>
                 </div>
             </div>
         {% else %}

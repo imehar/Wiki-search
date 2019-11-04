@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}
+Error
+{% endblock title %}
+{% block content %}
+ {{ message | safe}}
+<br>
+<a class="btn-link" href="{{ url_for('index') }}">Try again</a>
+
+{% endblock content %}

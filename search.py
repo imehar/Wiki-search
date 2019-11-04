@@ -6,14 +6,14 @@ from nltk.stem import PorterStemmer
 from nltk.corpus import stopwords
 import copy
 from functools import reduce
-
+from collections import defaultdict
 from flask import Flask
 from flask import Flask, render_template, request
 
 
 app = Flask(__name__)
 app.debug = True
-
+app.jinja_env.add_extension('jinja2.ext.loopcontrols')
 porter=PorterStemmer()
 
 
@@ -173,7 +173,10 @@ class QueryIndex:
 		return docid
 
 
-
+def clean_text(text):
+	clean = re.compile('<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});')
+	text = re.sub(clean,'',text)
+	return text
 
 
 q = QueryIndex()
@@ -193,11 +196,14 @@ def searchit():
 	result = q.startquery(query)
 	result = list(map(str,result))
 	q.readDoc(q.collectionFile)
-	return render_template('results.html',results=result,documents = q.documents)
+	texts = { docid:clean_text(doc_dict['text']) for docid,doc_dict in q.documents.items()}
+	return render_template('results.html',results=result,documents = q.documents,texts=texts)
 
 
 @app.route("/showpage/<docid>")
 def showpages(docid):
-	return docid
+	return render_template('page.html',message=q.documents[str(docid)]['text'])
 
 
+if __name__ == '__main__':
+	app.run()
