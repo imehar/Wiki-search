@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block title %}
-Error
+{{ title }}
 {% endblock title %}
 {% block content %}
- {{ message | safe}}
+ {{ message }}
 <br>
 <a class="btn-link" href="{{ url_for('index') }}">Try again</a>
 
